@@ -1,7 +1,27 @@
 <?php 
-$nickname=$_POST['nickname'];
-$email=$_POST['email'];
-$content=$_POST['content'];
+$nickname=htmlspecialchars($_POST['nickname']);
+$email=htmlspecialchars($_POST['email']);
+$content=htmlspecialchars($_POST['content']);
+
+ // １．データベースに接続する
+  $dsn = 'mysql:dbname=otoiawase_form;host=localhost';
+  $user = 'root';
+  $password='';
+  $dbh = new PDO($dsn, $user, $password);
+  $dbh->query('SET NAMES utf8');
+
+  // ２．SQL文を実行する
+  $sql = "INSERT INTO `survey` (`nickname`, `email`, `content`) VALUES ( ?, ?, ?);";
+
+  //プリペアードステートメント
+  $data = array($nickname,$email,$content);
+  $stmt = $dbh->prepare($sql);
+  $stmt->execute($data);
+
+  // ３．データベースを切断する
+  $dbh = null;
+
+
  ?>
 
 
